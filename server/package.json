@@ -6,7 +6,7 @@
     "prepare": "husky && husky install",
     "prisma": "prisma generate",
     "lint": "eslint . --ext .ts",
-    "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
+    "dev": "nodemon --exec ts-node -r tsconfig-paths/register server/src/app.ts",
     "build": "tsc",
     "start": "node dist/index.js",
     "test": "echo \"No test specified\" && exit 0"
