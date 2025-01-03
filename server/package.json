@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "app.ts",
   "scripts": {
-    "prepare": "husky",
+    "prepare": "husky && husky install",
     "prisma": "prisma generate",
     "lint": "eslint . --ext .ts",
     "dev": "nodemon --exec ts-node -r tsconfig-paths/register src/app.ts",
@@ -26,7 +26,7 @@
     "@typescript-eslint/eslint-plugin": "^8.18.2",
     "@typescript-eslint/parser": "^8.18.2",
     "eslint": "^9.17.0",
-    "husky": "^9.1.7",
+    "husky": "^8.0.0",
     "lint-staged": "^15.3.0",
     "nodemon": "^3.1.9",
     "prettier": "^3.4.2",
