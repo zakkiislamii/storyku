@@ -6,3 +6,38 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+enum Category {
+  financial
+  technology
+  health
+}
+
+enum Status {
+  publish
+  draft
+}
+
+model Stories {
+  story_id    String     @id @default(uuid())
+  title       String
+  writer      String
+  synopsis    String
+  category    Category
+  cover       String
+  tags        String[]
+  status      Status
+  chapters    Chapters[] @relation("StoryChapters")
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+}
+
+model Chapters {
+  chapter_id String     @id @default(uuid())
+  title      String
+  content    String
+  story      Stories    @relation("StoryChapters", fields: [story_id], references: [story_id])
+  story_id    String   
+  createdAt   DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}

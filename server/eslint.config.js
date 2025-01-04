@@ -7,6 +7,7 @@ export default [
     languageOptions: {
       globals: {
         ...globals.node,
+        ...globals.jest,
       },
       ecmaVersion: 2022,
       sourceType: "module",
@@ -16,9 +17,9 @@ export default [
         "warn",
         {
           vars: "all",
-          args: "all", 
+          args: "all",
           ignoreRestSiblings: false,
-          argsIgnorePattern: "^_", 
+          argsIgnorePattern: "^_",
         },
       ],
       "no-undef": "warn",
