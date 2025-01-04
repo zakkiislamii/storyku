@@ -97,16 +97,24 @@ export async function deleteStory(story_id) {
         story_id,
       },
     });
+
     if (!story) {
-      throw "Couldn't find story";
+      throw new Error("Couldn't find story");
     }
+
+    await prisma.chapters.deleteMany({
+      where: {
+        story_id,
+      },
+    });
+
     return await prisma.stories.delete({
       where: {
         story_id,
       },
     });
   } catch (error) {
-    throw new Error(error);
+    throw new Error(error.message || error);
   }
 }
 

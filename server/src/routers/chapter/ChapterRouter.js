@@ -3,8 +3,8 @@ import * as ChapterController from "../../controllers/chapter/ChapterController.
 
 const chapterRouter = Router();
 
-chapterRouter.put("/:chapter_id", ChapterController.updatedChapter);
+chapterRouter.put("/:chapter_id", ChapterController.updateChapter);
 chapterRouter.delete("/:chapter_id", ChapterController.deleteChapter);
-chapterRouter.get("/:story_id", ChapterController.getAll);
+chapterRouter.get("/:story_id", ChapterController.getAllChapters);
 
 export default chapterRouter;

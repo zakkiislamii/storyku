@@ -5,6 +5,7 @@ const mockUpdate = jest.fn();
 const mockGetAll = jest.fn();
 const mockSearch = jest.fn();
 const mockGetByFilter = jest.fn();
+const mockDeleteStory = jest.fn();
 
 jest.unstable_mockModule("../repositories/story/StoryRepository.js", () => ({
   create: mockCreate,
@@ -12,12 +13,14 @@ jest.unstable_mockModule("../repositories/story/StoryRepository.js", () => ({
   getAll: mockGetAll,
   search: mockSearch,
   getByFilter: mockGetByFilter,
+  deleteStory: mockDeleteStory,
   default: {
     create: mockCreate,
     update: mockUpdate,
     getAll: mockGetAll,
     search: mockSearch,
     getByFilter: mockGetByFilter,
+    deleteStory: mockDeleteStory,
   },
 }));
 
@@ -27,9 +30,10 @@ const {
   getAllStories,
   searchStories,
   filterStories,
+  deleteStories,
 } = await import("../controllers/story/StoryController.js");
 
-describe("StoryController", () => {
+describe("Story", () => {
   let mockRequest;
   let mockResponse;
 
@@ -206,6 +210,53 @@ describe("StoryController", () => {
       mockGetByFilter.mockRejectedValueOnce(error);
       await filterStories(mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(500);
+    });
+  });
+
+  describe("deleteStories", () => {
+    test("should delete a story successfully", async () => {
+      mockRequest.params = { story_id: "123" };
+      await deleteStories(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        status: "success",
+        message: "Stories successfully deleted",
+      });
+    });
+
+    test("should return 400 if story_id is missing", async () => {
+      mockRequest.params = {};
+      await deleteStories(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        status: "error",
+        message: "story_id is required",
+      });
+    });
+
+    test("should return 404 if story is not found", async () => {
+      mockRequest.params = { story_id: "999" };
+      const error = new Error("Couldn't find story");
+      mockDeleteStory.mockRejectedValueOnce(error);
+      await deleteStories(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(404);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        status: "error",
+        message: "Story not found",
+      });
+    });
+
+    test("should handle unexpected errors", async () => {
+      mockRequest.params = { story_id: "123" };
+      const error = new Error("Database error");
+      mockDeleteStory.mockRejectedValueOnce(error);
+      await deleteStories(mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        status: "error",
+        message: "Failed to delete story",
+        error: error.message,
+      });
     });
   });
 });
