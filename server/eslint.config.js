@@ -1,17 +1,19 @@
-const ts = require("@typescript-eslint/eslint-plugin");
-const tsParser = require("@typescript-eslint/parser");
+import js from "@eslint/js";
+import globals from "globals";
 
-module.exports = {
-  parser: "@typescript-eslint/parser",
-  extends: ["plugin:@typescript-eslint/recommended"],
-  parserOptions: {
-    ecmaVersion: 2020,
-    sourceType: "module",
+export default [
+  js.configs.recommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+      },
+      ecmaVersion: 2022,
+      sourceType: "module",
+    },
+    rules: {
+      "no-unused-vars": "warn",
+      "no-undef": "warn",
+    },
   },
-  rules: {
-    "no-console": "off",
-    "@typescript-eslint/no-explicit-any": "warn",
-    "@typescript-eslint/explicit-function-return-type": "warn",
-    "@typescript-eslint/no-unused-vars": "warn",
-  },
-};
+];
