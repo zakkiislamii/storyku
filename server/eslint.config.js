@@ -12,7 +12,15 @@ export default [
       sourceType: "module",
     },
     rules: {
-      "no-unused-vars": "warn",
+      "no-unused-vars": [
+        "warn",
+        {
+          vars: "all",
+          args: "all", 
+          ignoreRestSiblings: false,
+          argsIgnorePattern: "^_", 
+        },
+      ],
       "no-undef": "warn",
     },
   },
