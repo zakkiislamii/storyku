@@ -1,11 +1,20 @@
 export const sendResponse = (
   res,
-  { status = 200, success = true, message, data = null, error = null }
+  { status = true, code = 200, message, data = null, error = null }
 ) => {
-  return res.status(status).json({
-    status: success ? "success" : "error",
-    message,
-    ...(data && { data }),
-    ...(error && { error }),
-  });
+  const response = {
+    status: status ? "success" : "error",
+    code: code,
+    message: message,
+  };
+
+  if (status && data) {
+    response.data = data;
+  }
+
+  if (!status && error) {
+    response.error = error;
+  }
+
+  return res.status(code).json(response);
 };

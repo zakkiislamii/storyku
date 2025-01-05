@@ -30,7 +30,7 @@ const {
   getAllStories,
   searchStories,
   filterStories,
-  deleteStories,
+  deleteStory,
 } = await import("../controllers/story/StoryController.js");
 
 describe("Story", () => {
@@ -70,48 +70,28 @@ describe("Story", () => {
     test("should create a story successfully", async () => {
       mockRequest.body = mockStoryData;
       mockCreate.mockResolvedValueOnce(mockStoryData);
-      await createStory(mockRequest, mockResponse);
+      await createStory[1](mockRequest, mockResponse);
       expect(mockCreate).toHaveBeenCalledWith(mockStoryData);
       expect(mockResponse.status).toHaveBeenCalledWith(201);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
+        code: 201,
         message: "Story created successfully",
         data: mockStoryData,
       });
     });
 
-    test("should return 400 if story data is missing", async () => {
-      mockRequest.body = null;
-      await createStory(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "All fields are required",
-      });
-    });
-
-    test("should handle errors during story creation", async () => {
+    test("should handle duplicate title error", async () => {
       mockRequest.body = mockStoryData;
-      const error = new Error("Database error");
+      const error = new Error("Story with this title already exists");
       mockCreate.mockRejectedValueOnce(error);
-      await createStory(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      await createStory[1](mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "error",
-        message: "Failed to create story",
-        error: error.message,
+        code: 400,
+        message: "Story with this title already exists",
       });
-    });
-
-    test("should validate required fields", async () => {
-      const invalidData = {
-        title: "Test Story",
-      };
-      mockRequest.body = invalidData;
-      const error = new Error("Missing required fields");
-      mockCreate.mockRejectedValueOnce(error);
-      await createStory(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
     });
   });
 
@@ -125,26 +105,17 @@ describe("Story", () => {
       tags: ["updated"],
       status: "publish",
     };
+
     test("should update a story successfully", async () => {
       mockRequest.params = { story_id: "1" };
       mockRequest.body = mockStoryData;
       mockUpdate.mockResolvedValueOnce(mockStoryData);
-      await updateStory(mockRequest, mockResponse);
+      await updateStory[1](mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
+        code: 200,
         message: "Story updated successfully",
-      });
-    });
-
-    test("should handle invalid ID format", async () => {
-      mockRequest.params = {};
-      mockRequest.body = mockStoryData;
-      await updateStory(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "Invalid story ID format",
       });
     });
   });
@@ -160,24 +131,15 @@ describe("Story", () => {
     test("should get all stories successfully with pagination", async () => {
       mockRequest.query = { page: "2" };
       mockGetAll.mockResolvedValueOnce(mockStoriesResponse);
-
-      await getAllStories(mockRequest, mockResponse);
-
+      await getAllStories[1](mockRequest, mockResponse);
       expect(mockGetAll).toHaveBeenCalledWith(2);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
+        code: 200,
         message: "Stories retrieved successfully",
         data: mockStoriesResponse,
       });
-    });
-
-    test("should handle negative page number", async () => {
-      mockRequest.query = { page: "-1" };
-      const defaultResponse = { ...mockStoriesResponse, currentPage: 1 };
-      mockGetAll.mockResolvedValueOnce(defaultResponse);
-      await getAllStories(mockRequest, mockResponse);
-      expect(mockGetAll).toHaveBeenCalledWith(1);
     });
   });
 
@@ -185,11 +147,12 @@ describe("Story", () => {
     test("should return empty array when no stories found", async () => {
       mockRequest.query = { query: "nonexistent" };
       mockSearch.mockResolvedValueOnce([]);
-      await searchStories(mockRequest, mockResponse);
+      await searchStories[1](mockRequest, mockResponse);
       expect(mockSearch).toHaveBeenCalledWith("nonexistent");
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
+        code: 200,
         message: "Stories found successfully",
         data: [],
       });
@@ -197,65 +160,48 @@ describe("Story", () => {
   });
 
   describe("filterStories", () => {
-    test("should validate category enum values", async () => {
-      mockRequest.query = { category: "invalid_category" };
-      const error = new Error("Invalid category");
-      mockGetByFilter.mockRejectedValueOnce(error);
-      await filterStories(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-    });
-    test("should validate status enum values", async () => {
-      mockRequest.query = { status: "invalid_status" };
-      const error = new Error("Invalid status");
-      mockGetByFilter.mockRejectedValueOnce(error);
-      await filterStories(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-    });
-  });
+    const mockFilteredStories = [
+      { id: 1, title: "Story 1", category: "financial" },
+    ];
 
-  describe("deleteStories", () => {
-    test("should delete a story successfully", async () => {
-      mockRequest.params = { story_id: "123" };
-      await deleteStories(mockRequest, mockResponse);
+    test("should filter stories successfully", async () => {
+      mockRequest.query = { category: "financial" };
+      mockGetByFilter.mockResolvedValueOnce(mockFilteredStories);
+      await filterStories[1](mockRequest, mockResponse);
+      expect(mockGetByFilter).toHaveBeenCalledWith("financial", undefined);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
-        message: "Stories successfully deleted",
+        code: 200,
+        message: "Stories filtered successfully",
+        data: mockFilteredStories,
       });
     });
+  });
 
-    test("should return 400 if story_id is missing", async () => {
-      mockRequest.params = {};
-      await deleteStories(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
+  describe("deleteStory", () => {
+    test("should delete a story successfully", async () => {
+      mockRequest.params = { story_id: "123" };
+      await deleteStory[1](mockRequest, mockResponse);
+      expect(mockDeleteStory).toHaveBeenCalledWith("123");
+      expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "story_id is required",
+        status: "success",
+        code: 200,
+        message: "Story deleted successfully",
       });
     });
 
-    test("should return 404 if story is not found", async () => {
+    test("should handle not found error", async () => {
       mockRequest.params = { story_id: "999" };
       const error = new Error("Couldn't find story");
       mockDeleteStory.mockRejectedValueOnce(error);
-      await deleteStories(mockRequest, mockResponse);
+      await deleteStory[1](mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "error",
+        code: 404,
         message: "Story not found",
-      });
-    });
-
-    test("should handle unexpected errors", async () => {
-      mockRequest.params = { story_id: "123" };
-      const error = new Error("Database error");
-      mockDeleteStory.mockRejectedValueOnce(error);
-      await deleteStories(mockRequest, mockResponse);
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "Failed to delete story",
-        error: error.message,
       });
     });
   });

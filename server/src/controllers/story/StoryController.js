@@ -17,21 +17,21 @@ export const createStory = [
       const storyData = req.body;
       const story = await StoryRepository.create(storyData);
       return sendResponse(res, {
-        status: 201,
+        code: 201,
         message: "Story created successfully",
         data: story,
       });
     } catch (error) {
       if (error.message === "Story with this title already exists") {
         return sendResponse(res, {
-          status: 400,
-          success: false,
+          status: false,
+          code: 400,
           message: error.message,
         });
       }
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to create story",
         error: error.message,
       });
@@ -52,14 +52,14 @@ export const updateStory = [
     } catch (error) {
       if (error.message === "Story with this title already exists") {
         return sendResponse(res, {
-          status: 400,
-          success: false,
+          status: false,
+          code: 400,
           message: error.message,
         });
       }
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to update story",
         error: error.message,
       });
@@ -79,8 +79,8 @@ export const getAllStories = [
       });
     } catch (error) {
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to retrieve stories",
         error: error.message,
       });
@@ -100,8 +100,8 @@ export const searchStories = [
       });
     } catch (error) {
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to search stories",
         error: error.message,
       });
@@ -121,14 +121,14 @@ export const deleteStory = [
     } catch (error) {
       if (error.message === "Couldn't find story") {
         return sendResponse(res, {
-          status: 404,
-          success: false,
+          status: false,
+          code: 404,
           message: "Story not found",
         });
       }
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to delete story",
         error: error.message,
       });
@@ -148,8 +148,8 @@ export const filterStories = [
       });
     } catch (error) {
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to filter stories",
         error: error.message,
       });

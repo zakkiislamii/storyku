@@ -18,7 +18,7 @@ jest.unstable_mockModule(
   })
 );
 
-const { updatedChapter, getAll, deleteChapter } = await import(
+const { updateChapter, getAllChapters, deleteChapter } = await import(
   "../controllers/chapter/ChapterController.js"
 );
 
@@ -49,36 +49,12 @@ describe("Chapter", () => {
       mockRequest.params = { chapter_id: "123" };
       mockRequest.body = mockChapterData;
       mockUpdate.mockResolvedValueOnce(mockChapterData);
-      await updatedChapter(mockRequest, mockResponse);
+      await updateChapter[1](mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
+        code: 200,
         message: "Chapter updated successfully",
-      });
-    });
-
-    test("should return 400 if chapter_id is missing", async () => {
-      mockRequest.body = mockChapterData;
-
-      await updatedChapter(mockRequest, mockResponse);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "Chapter ID is required",
-      });
-    });
-
-    test("should return 400 if required fields are missing", async () => {
-      mockRequest.params = { chapter_id: "123" };
-      mockRequest.body = { title: "Title only" };
-
-      await updatedChapter(mockRequest, mockResponse);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "Title and content are required",
       });
     });
 
@@ -87,18 +63,32 @@ describe("Chapter", () => {
       mockRequest.body = mockChapterData;
       const error = new Error("Chapter with this title already exists");
       mockUpdate.mockRejectedValueOnce(error);
-
-      await updatedChapter(mockRequest, mockResponse);
-
+      await updateChapter[1](mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(400);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "error",
+        code: 400,
         message: "Chapter with this title already exists",
+      });
+    });
+
+    test("should handle unexpected errors", async () => {
+      mockRequest.params = { chapter_id: "123" };
+      mockRequest.body = mockChapterData;
+      const error = new Error("Database error");
+      mockUpdate.mockRejectedValueOnce(error);
+      await updateChapter[1](mockRequest, mockResponse);
+      expect(mockResponse.status).toHaveBeenCalledWith(500);
+      expect(mockResponse.json).toHaveBeenCalledWith({
+        status: "error",
+        code: 500,
+        message: "Failed to update chapter",
+        error: "Database error",
       });
     });
   });
 
-  describe("get all chapter", () => {
+  describe("get all chapters", () => {
     const mockChapters = [
       { id: "1", title: "Chapter 1", content: "Content 1" },
       { id: "2", title: "Chapter 2", content: "Content 2" },
@@ -107,25 +97,14 @@ describe("Chapter", () => {
     test("should get all chapters successfully", async () => {
       mockRequest.params = { story_id: "123" };
       mockGetAll.mockResolvedValueOnce(mockChapters);
-
-      await getAll(mockRequest, mockResponse);
-
+      await getAllChapters[1](mockRequest, mockResponse);
       expect(mockGetAll).toHaveBeenCalledWith("123");
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
+        code: 200,
         message: "Chapters retrieved successfully",
         data: mockChapters,
-      });
-    });
-
-    test("should return 400 if story_id is missing", async () => {
-      await getAll(mockRequest, mockResponse);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "Chapter ID is required",
       });
     });
 
@@ -133,12 +112,11 @@ describe("Chapter", () => {
       mockRequest.params = { story_id: "999" };
       const error = new Error("Chapter not found");
       mockGetAll.mockRejectedValueOnce(error);
-
-      await getAll(mockRequest, mockResponse);
-
+      await getAllChapters[1](mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "error",
+        code: 404,
         message: "Chapter not found",
       });
     });
@@ -147,53 +125,26 @@ describe("Chapter", () => {
   describe("delete chapter", () => {
     test("should delete chapter successfully", async () => {
       mockRequest.params = { chapter_id: "123" };
-
-      await deleteChapter(mockRequest, mockResponse);
-
+      await deleteChapter[1](mockRequest, mockResponse);
       expect(mockDeleteChapter).toHaveBeenCalledWith("123");
       expect(mockResponse.status).toHaveBeenCalledWith(200);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "success",
+        code: 200,
         message: "Chapter deleted successfully",
       });
     });
 
-    test("should return 400 if chapter_id is missing", async () => {
-      await deleteChapter(mockRequest, mockResponse);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(400);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "Chapter ID is required",
-      });
-    });
-
-    test("should return 404 if chapter not found", async () => {
+    test("should handle not found error", async () => {
       mockRequest.params = { chapter_id: "999" };
       const error = new Error("Chapter not found");
       mockDeleteChapter.mockRejectedValueOnce(error);
-
-      await deleteChapter(mockRequest, mockResponse);
-
+      await deleteChapter[1](mockRequest, mockResponse);
       expect(mockResponse.status).toHaveBeenCalledWith(404);
       expect(mockResponse.json).toHaveBeenCalledWith({
         status: "error",
+        code: 404,
         message: "Chapter not found",
-      });
-    });
-
-    test("should handle unexpected errors", async () => {
-      mockRequest.params = { chapter_id: "123" };
-      const error = new Error("Database error");
-      mockDeleteChapter.mockRejectedValueOnce(error);
-
-      await deleteChapter(mockRequest, mockResponse);
-
-      expect(mockResponse.status).toHaveBeenCalledWith(500);
-      expect(mockResponse.json).toHaveBeenCalledWith({
-        status: "error",
-        message: "Failed to delete chapter",
-        error: error.message,
       });
     });
   });

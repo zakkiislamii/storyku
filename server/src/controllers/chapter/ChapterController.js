@@ -20,15 +20,15 @@ export const updateChapter = [
     } catch (error) {
       if (error.message === "Chapter with this title already exists") {
         return sendResponse(res, {
-          status: 400,
-          success: false,
+          status: false,
+          code: 400,
           message: error.message,
         });
       }
 
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to update chapter",
         error: error.message,
       });
@@ -48,15 +48,15 @@ export const deleteChapter = [
     } catch (error) {
       if (error.message === "Chapter not found") {
         return sendResponse(res, {
-          status: 404,
-          success: false,
+          status: false,
+          code: 404,
           message: error.message,
         });
       }
 
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to delete chapter",
         error: error.message,
       });
@@ -78,15 +78,15 @@ export const getAllChapters = [
     } catch (error) {
       if (error.message === "Chapter not found") {
         return sendResponse(res, {
-          status: 404,
-          success: false,
+          status: false,
+          code: 404,
           message: error.message,
         });
       }
 
       return sendResponse(res, {
-        status: 500,
-        success: false,
+        status: false,
+        code: 500,
         message: "Failed to retrieve chapters",
         error: error.message,
       });
