@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import FilterModal from "../../../../components/modal/filterModal/FilterModal";
 
 const ManagementStoryHeader = () => {
+  const [showFilterModal, setShowFilterModal] = useState(false);
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-center bg-white p-4 rounded-lg gap-4">
-      {/* Search bar */}
       <div className="flex items-center bg-gray-100 p-2 rounded-md w-full md:max-w-md">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -23,10 +25,11 @@ const ManagementStoryHeader = () => {
           className="bg-transparent outline-none md:text-sm text-md text-gray-700 flex-1"
         />
       </div>
-
-      {/* Buttons */}
       <div className="flex flex-col md:flex-row justify-center items-center gap-4">
-        <button className="flex items-center justify-center w-10 h-10 border rounded-full border-gray-300 text-gray-600 hover:bg-gray-100">
+        <button
+          onClick={() => setShowFilterModal(true)}
+          className="flex items-center justify-center w-10 h-10 border rounded-full border-gray-300 text-gray-600 hover:bg-gray-100"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -42,10 +45,14 @@ const ManagementStoryHeader = () => {
             <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3" />
           </svg>
         </button>
-        <button className="flex items-center bg-orange-500 text-white px-5 py-2 rounded-[3rem] hover:bg-orange-600 text-sm md:text-base">
+        <button className="flex items-center bg-[#ff7300] text-white px-5 py-2 rounded-[3rem] hover:bg-orange-600 text-sm md:text-base">
           <span className="font-semibold mr-2">+ Add Story</span>
         </button>
       </div>
+      <FilterModal
+        open={showFilterModal}
+        onClose={() => setShowFilterModal(false)}
+      />
     </div>
   );
 };
