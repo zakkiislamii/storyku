@@ -23,23 +23,40 @@ const Navbar = ({ isOpen, toggleNavbar }) => {
       <ul className="space-y-4">
         <li>
           <NavLink
-            to={"/"}
-            className="flex justify-center items-center font-bold w-full px-4 py-3 text-gray-700 hover:bg-[#21bad5] transition-colors"
-            activeclassName="active"
+            to="/"
+            className={({ isActive }) =>
+              `flex justify-center items-center font-bold w-full px-4 py-3 text-gray-700 hover:bg-[#21bad5] transition-colors ${
+                isActive ? "active" : ""
+              }`
+            }
           >
             Dashboard
           </NavLink>
         </li>
         <li>
           <NavLink
-            to={"/stories"}
-            className="flex justify-center items-center font-bold w-full px-4 py-3 text-gray-700 hover:bg-[#21bad5] transition-colors"
-            activeclassName="active"
+            to="/stories"
+            className={({ isActive }) =>
+              `flex justify-center items-center font-bold w-full px-4 py-3 text-gray-700 hover:bg-[#21bad5] transition-colors ${
+                isActive ? "active" : ""
+              }`
+            }
           >
             Story Management
           </NavLink>
         </li>
       </ul>
+      <style>
+        {`
+          .active {
+            background-color: #21bad5;
+            color: white;
+          }
+          .rotate-180 {
+            transform: rotate(180deg);
+          }
+        `}
+      </style>
     </nav>
   );
 };

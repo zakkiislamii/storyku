@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import Dashboard from "./pages/dashboard/Dashboard";
 import "./App.css";
 import AddStory from "./pages/story/addStory/AddStory";
-import ManagementStory from "./pages/story/managementStory/ManagementStory";
 import Layout from "./layout/Layout";
+import StoryManagement from "./pages/story/storyManagement/StoryManagement";
 
 export default function App() {
   const ScrollToTop = () => {
@@ -23,7 +23,7 @@ export default function App() {
           <Route element={<Layout />}>
             <Route path="/" element={<Dashboard />} />
             <Route path="/stories/add" element={<AddStory />} />
-            <Route path="/stories" element={<ManagementStory />} />
+            <Route path="/stories" element={<StoryManagement />} />
           </Route>
         </Routes>
       </BrowserRouter>
