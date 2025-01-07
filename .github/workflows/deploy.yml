@@ -10,21 +10,21 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SSH_USER: "your-ssh-username"
-      SSH_PASSWORD: "your-ssh-password"
-      SSH_HOST: "your-ssh-host"  # Misalnya: example.com atau IP VPS Anda
+      SSH_USER: root
+      SSH_PASSWORD: #Arvanganteng123
+      SSH_HOST: 88.222.215.117
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-    - name: Install Dependencies
-      run: |
-        sudo apt-get update -qq && sudo apt-get install -y -qq sshpass  # Menambahkan sudo untuk akses root
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass  # Menambahkan sudo untuk akses root
 
-    - name: Deploy to VPS
-      run: |
-        # Pastikan password diteruskan dengan benar menggunakan sshpass
-        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "mkdir -p /var/www/storyku-server.myzaki.store"
-        sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./ $SSH_USER@$SSH_HOST:/var/www/storyku-server.myzaki.store/
-        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd /var/www/storyku-server.myzaki.store && npm install -g pm2 && pm2 restart storyku-zaki || pm2 start app.js --name storyku-zaki"
+      - name: Deploy to VPS
+        run: |
+          # Pastikan password diteruskan dengan benar menggunakan sshpass
+          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "mkdir -p /var/www/storyku-server.myzaki.store"
+          sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./ $SSH_USER@$SSH_HOST:/var/www/storyku-server.myzaki.store/
+          sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd /var/www/storyku-server.myzaki.store && npm install -g pm2 && pm2 restart storyku-zaki || pm2 start app.js --name storyku-zaki"
