@@ -80,3 +80,18 @@ export async function getAll(story_id) {
     throw new Error(`Failed to get chapters: ${error.message}`);
   }
 }
+export async function getAllById(chapter_id) {
+  try {
+    const chapter = await prisma.chapters.findUnique({
+      where: {
+        chapter_id,
+      },
+    });
+    if (!chapter) {
+      throw "Chapter not found";
+    }
+    return chapter;
+  } catch (error) {
+    throw new Error(`Failed to get chapters: ${error.message}`);
+  }
+}

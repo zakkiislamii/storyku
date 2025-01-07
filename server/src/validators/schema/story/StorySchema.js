@@ -38,6 +38,12 @@ export const deleteSchema = {
   }),
 };
 
+export const getByIdSchema = {
+  params: Joi.object({
+    story_id: Joi.string().uuid().required(),
+  }),
+};
+
 export const getAllSchema = {
   query: Joi.object({
     page: Joi.number().integer().min(1).optional(),

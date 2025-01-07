@@ -2,6 +2,7 @@ import * as ChapterRepository from "../../repositories/chapter/ChapterRepository
 import { sendResponse } from "../../utils/ResponseHandler.js";
 import {
   deleteSchema,
+  getAllByIdSchema,
   getAllSchema,
   updateSchema,
 } from "../../validators/schema/chapter/ChapterSchema.js";
@@ -71,6 +72,35 @@ export const getAllChapters = [
       const { story_id } = req.params;
 
       const chapters = await ChapterRepository.getAll(story_id);
+      return sendResponse(res, {
+        message: "Chapters retrieved successfully",
+        data: chapters,
+      });
+    } catch (error) {
+      if (error.message === "Chapter not found") {
+        return sendResponse(res, {
+          status: false,
+          code: 404,
+          message: error.message,
+        });
+      }
+
+      return sendResponse(res, {
+        status: false,
+        code: 500,
+        message: "Failed to retrieve chapters",
+        error: error.message,
+      });
+    }
+  },
+];
+
+export const getAllChaptersById = [
+  ValidateChapter(getAllByIdSchema),
+  async (req, res) => {
+    try {
+      const { chapter_id } = req.params;
+      const chapters = await ChapterRepository.getAllById(chapter_id);
       return sendResponse(res, {
         message: "Chapters retrieved successfully",
         data: chapters,

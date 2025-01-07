@@ -3,6 +3,7 @@ import cors from "cors"; // Import cors
 import storyRouter from "./routers/story/StoryRouter.js";
 import { validateApiKey } from "./middlewares/ValidateApiKey.js";
 import chapterRouter from "./routers/chapter/ChapterRouter.js";
+import firebaseRouter from "./firebase/routers/router.js";
 
 const app = express();
 const url = process.env.URL;
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use(validateApiKey);
 app.use("/api/stories", storyRouter);
 app.use("/api/chapters", chapterRouter);
+app.use("/api", firebaseRouter);
 
 app.listen(port, () => {
   console.log(`Server is running on ${url}`);

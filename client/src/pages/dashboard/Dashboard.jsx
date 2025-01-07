@@ -1,5 +1,11 @@
+import Content from "./partials/content";
+
 const Dashboard = () => {
-  return <div className="text-black">Dashbaord</div>;
+  return (
+    <>
+      <Content />
+    </>
+  );
 };
 
 export default Dashboard;

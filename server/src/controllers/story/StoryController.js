@@ -7,6 +7,7 @@ import {
   getAllSchema,
   searchSchema,
   filterSchema,
+  getByIdSchema,
 } from "../../validators/schema/story/StorySchema.js";
 import { ValidateChapter } from "../../validators/ValidateChapter.js";
 
@@ -82,6 +83,35 @@ export const getAllStories = [
         status: false,
         code: 500,
         message: "Failed to retrieve stories",
+        error: error.message,
+      });
+    }
+  },
+];
+
+export const getStoryById = [
+  ValidateChapter(getByIdSchema),
+  async (req, res) => {
+    try {
+      const { story_id } = req.params;
+      const data = await StoryRepository.getStoryById(story_id);
+      return sendResponse(res, {
+        message: "Story successfully got",
+        data: data,
+      });
+    } catch (error) {
+      if (error.message === "Story not found") {
+        return sendResponse(res, {
+          status: false,
+          code: 400,
+          message: "Story not found",
+          error: error.message,
+        });
+      }
+      return sendResponse(res, {
+        status: false,
+        code: 500,
+        message: "Failed to get stories",
         error: error.message,
       });
     }

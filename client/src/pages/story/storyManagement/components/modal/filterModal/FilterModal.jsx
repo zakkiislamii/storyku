@@ -6,14 +6,15 @@ import {
 } from "@headlessui/react";
 import { X } from "lucide-react";
 import { useState } from "react";
-import StatusDropdown from "../../dropDown/StatusDropdown";
-import CategoryDropdown from "../../dropDown/CategoryDropdown";
+import StatusDropdown from "../../../../../../components/dropDown/StatusDropdown";
+import CategoryDropdown from "../../../../../../components/dropDown/CategoryDropdown";
 
 const FilterModal = ({ open, onClose, onFilter }) => {
   const [selectedCategory, setSelectedCategory] = useState("Category");
   const [selectedStatus, setSelectedStatus] = useState("Status");
 
-  const handleReset = () => {
+  const handleReset = (event) => {
+    event.stopPropagation();
     setSelectedCategory("Category");
     setSelectedStatus("Status");
     onFilter({ category: "", status: "" });
@@ -100,7 +101,7 @@ const FilterModal = ({ open, onClose, onFilter }) => {
 
               <button
                 type="button"
-                onClick={handleReset}
+                onClick={(event) => handleReset(event)}
                 className="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100 sm:mt-0 sm:w-auto"
               >
                 Reset

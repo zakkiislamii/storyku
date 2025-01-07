@@ -21,3 +21,9 @@ export const getAllSchema = {
     story_id: Joi.string().uuid().required(),
   }),
 };
+
+export const getAllByIdSchema = {
+  params: Joi.object({
+    chapter_id: Joi.string().uuid().required(),
+  }),
+};

@@ -177,3 +177,22 @@ export async function getByFilter(category, status) {
     throw new Error(error);
   }
 }
+
+export async function getStoryById(story_id) {
+  try {
+    const story = await prisma.stories.findMany({
+      where: {
+        story_id,
+      },
+      include: {
+        chapters: true,
+      },
+    });
+    if (!story || story === null) {
+      throw "Story not found";
+    }
+    return story;
+  } catch (error) {
+    throw new Error(`Failed to get story: ${error.message}`);
+  }
+}

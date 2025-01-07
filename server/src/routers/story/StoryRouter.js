@@ -6,6 +6,7 @@ const storyRouter = Router();
 storyRouter.post("/", StoryController.createStory);
 storyRouter.put("/:story_id", StoryController.updateStory);
 storyRouter.delete("/:story_id", StoryController.deleteStory);
+storyRouter.get("/by_id/:story_id", StoryController.getStoryById);
 storyRouter.get("/", StoryController.getAllStories);
 storyRouter.get("/search", StoryController.searchStories);
 storyRouter.get("/filter", StoryController.filterStories);

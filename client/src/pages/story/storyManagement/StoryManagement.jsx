@@ -21,7 +21,7 @@ const StoryManagement = () => {
 
   return (
     <>
-      <h1 className="font-bold p-4 text-3xl mb-10">Stories</h1>
+      <h1 className="font-bold p-4 text-3xl mb-10 h-full">Stories</h1>
       <StoryManagementHeader onSearch={handleSearch} onFilter={handleFilter} />
       <TableStory stories={stories} currentPage={currentPage} />
       <StoryManagementPagination
