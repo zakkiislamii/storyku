@@ -23,5 +23,5 @@ jobs:
         sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "mkdir -p /var/www/storyku-server.myzaki.store"
         sshpass -p "$SSH_PASSWORD" scp -o StrictHostKeyChecking=no -r ./ $SSH_USER@$SSH_HOST:/var/www/storyku-server.myzaki.store/
 
-        # Install dependencies dan menjalankan aplikasi dengan npm run dev
-        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd /var/www/storyku-server.myzaki.store && npm install && npm run dev"
+        # Masuk ke folder 'server' untuk backend, install dependencies dan jalankan aplikasi dengan npm run dev
+        sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "cd /var/www/storyku-server.myzaki.store/server && npm install && npm run dev"
