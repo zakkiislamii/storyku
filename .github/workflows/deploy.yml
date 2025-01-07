@@ -10,9 +10,9 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      SSH_USER: root
-      SSH_PASSWORD: #Arvanganteng123
-      SSH_HOST: 88.222.215.117
+      SSH_USER: "root"
+      SSH_PASSWORD: "#Arvanganteng123"
+      SSH_HOST: "88.222.215.117"
 
     steps:
       - name: Checkout Code
