@@ -15,11 +15,11 @@ jobs:
 
     - name: Install Dependencies
       run: |
-        sudo apt-get update -qq && sudo apt-get install -y -qq sshpass  # Tambahkan sudo untuk menjalankan apt-get dengan hak akses root
+        sudo apt-get update -qq && sudo apt-get install -y -qq sshpass  # Menambahkan sudo
 
     - name: Deploy to VPS
       run: |
-        # Menggunakan sshpass untuk menjalankan perintah SSH dan SCP dengan password
-        sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p /var/www/storyku-server.myzaki.store"
-        sshpass -p ${{ secrets.SSH_PASSWORD }} scp -o StrictHostKeyChecking=no -r ./* ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/storyku-server.myzaki.store/
-        sshpass -p ${{ secrets.SSH_PASSWORD }} ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/storyku-server.myzaki.store && npm install -g pm2 && pm2 restart storyku-zaki || pm2 start app.js --name storyku-zaki"
+        # Pastikan password dimasukkan dengan benar menggunakan sshpass
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "mkdir -p /var/www/storyku-server.myzaki.store"
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" scp -o StrictHostKeyChecking=no -r ./ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/storyku-server.myzaki.store/
+        sshpass -p "${{ secrets.SSH_PASSWORD }}" ssh -o StrictHostKeyChecking=no ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "cd /var/www/storyku-server.myzaki.store && npm install -g pm2 && pm2 restart storyku-zaki || pm2 start app.js --name storyku-zaki"
