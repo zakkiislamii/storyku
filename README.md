@@ -1,8 +1,6 @@
-# Backend Readme
-
 ## Project Name
 
-Storyku Backend
+Storyku
 
 ---
 
@@ -29,3 +27,4 @@ Storyku Backend
 ### Link Deploy Project
 
    ```https://storyku-client.vercel.app/stories```
+   
