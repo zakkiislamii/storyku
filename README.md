@@ -26,5 +26,5 @@ Storyku
 
 ### Link Deploy Project
 
-   ```https://storyku-client.vercel.app/stories```
+   https://storyku-client.vercel.app
    
